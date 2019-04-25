@@ -1,0 +1,18 @@
+{
+	"css":["base.css","home.css"],
+	"js":["script.js"],
+	"template":"home.html",
+	"content":{
+		"orientation":"orientation.txt",
+		"webdesignCoverText":"webdesignCoverText.txt",
+		"programmingCoverText":"programmingCoverText.txt",
+		"studies":"studies.txt",
+		"exercise":"exercise.txt",
+		"stack":"stack.txt",
+		"design":"design.txt",
+		"cms":"cms.txt",
+		"onlineBuisness":"onlineBuisness.txt"
+	},
+	"path":"home.html",
+	"url":"/"
+}

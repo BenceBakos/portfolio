@@ -1,0 +1,95 @@
+body{
+	font-family: 'Noto Serif', serif;
+}
+html{
+	scroll-behavior: smooth;
+}
+
+#header{
+	width:100%;
+	height:6rem;
+	position:fixed;
+	left:0;
+	top:0;
+	background-color:black;
+	text-align:center;
+	z-index:5;
+}
+#header a{
+	color:white;
+	font-size:1rem;
+    display: inline-block;
+	width:30%;
+	height:100%;
+	text-decoration:none;
+	text-transform: uppercase;
+}
+#header a:hover{
+	color:white;
+}
+#header nav, #header-social{
+	height:50%;
+	margin:0;
+	padding:0;
+}
+#header-social{
+	background-color:white;
+}
+#header-social img{
+	height:80%;
+	width:auto;
+	float:right;
+	margin-right:1rem;
+
+}
+main{
+	margin-top:2.7rem;
+}
+section{
+	padding:0;
+	margin:0;
+	padding-top:10vh;
+}
+section{
+	margin-left:1.5rem;
+}
+
+section header{
+	margin-left:2rem;
+	margin-bottom:2rem;
+	margin-top:4rem;
+}
+
+article{
+	margin-left:3rem;
+	margin-bottom:5rem;
+	position:relative;
+}
+article hr{
+	width:3rem;
+	height:50rem;
+	border-top:2px solid black;
+	border-left:2px solid black;
+	border-right:none;
+	border-bottom:none;
+	position:absolute;
+	left:-4rem;
+	top:2rem;
+}
+/*for-desktop-up*/
+@media (min-width: 900px) {
+	main{
+		margin:0 10vw 0 10vw;
+	}
+	section{
+		margin-left:3rem;
+	}
+	article{
+		margin-left:8rem;
+	}
+	section header{
+		margin-left:8rem;
+	}
+	#header a{
+	}
+}

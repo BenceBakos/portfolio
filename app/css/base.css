@@ -1,0 +1,51 @@
+html,body,body *{
+	padding:0;
+	margin:0;
+}
+p{
+	font-size:1.3rem;
+}
+h1{
+	font-size:2.6rem
+}
+h2{
+	font-size:2.3rem;	
+}
+h3{
+	font-size:1.4rem;	
+	
+}
+
+
+/*breakpoints*/
+
+/*phone only*/
+@media (max-width: 599px) {
+	body{
+		font-size:40px;
+	}
+}
+/*for-tablet-portrait-up*/
+@media (min-width: 600px) {
+	body{
+		font-size:30px;
+	}
+}
+
+/*for-tablet-landscape-up */
+@media (min-width: 900px) {
+	body{
+		font-size:30px;
+	}
+}
+/*for-desktop-up*/
+@media (min-width: 1200px) {
+	body{
+		font-size:30px;
+	}
+}
+
+/*for-big-desktop-up*/
+@media (min-width: 1800px) {
+	
+}
