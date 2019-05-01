@@ -11,7 +11,9 @@ render()
 from pathlib import Path
 from cssmin import cssmin
 from jsmin import jsmin
-from bottle import SimpleTemplate,static_file
+from bottle import SimpleTemplate,static_file,auth_basic
+from lib.auth import check
+import json
 import re
 import base64
 
@@ -21,21 +23,38 @@ reloader=True
 
 class Page:
 	def __init__(self, data):
-		if not data or type(data) is not dict:
+		if not data:
 			raise ValueError('data is required')
 		else:
-			self.data=data
+			self.dataPath=Path('./app/pages/'+data)
 	
 	def servePage(self):
 		global reloader
-		if reloader:
-			self.render()
-			print(self.data['path']+' is reoaded')
-			
-		return static_file(Path(self.data['path']).name, root="static/")
+		
+		
+		
+		if self.data['auth']:
+			@auth_basic(check)
+			def serve():
+				if reloader:
+					self.render()
+					print(self.data['path']+' is reoaded')
+				return static_file(Path(self.data['path']).name, root="static/")
+		else:
+			def serve():
+				if reloader:
+					self.render()
+					print(self.data['path']+' is reoaded')
+				return static_file(Path(self.data['path']).name, root="static/")
+		
+		return serve()
 	
 	def render(self):
+		self.data=json.loads(self.dataPath.read_text())
 		tempData={}
+		#**auth**
+		if 'auth' not in self.data:
+			self.data['auth']=False
 		
 		#**prepare css
 		if 'css' in self.data and len(self.data['css']):

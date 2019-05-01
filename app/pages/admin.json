@@ -1,0 +1,8 @@
+{
+	"css":["admin.css"],
+	"js":["admin.js"],
+	"template":"admin.html",
+	"path":"admin.html",
+	"url":"/admin",
+	"auth":true
+}

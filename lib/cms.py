@@ -1,7 +1,8 @@
 from lib.page import Page
 from pathlib import Path
 import json
-from bottle import auth_basic,response,request
+from bottle import response,request,auth_basic
+from lib.auth import check
 import os
 #get contents path
 def getListOfFiles(dirName):
@@ -21,26 +22,6 @@ def getListOfFiles(dirName):
                 
     return allFiles
 
-#authentication
-def check(user, pw):
-	if pw == "admin" and user == "admin":
-		return True
-	else:
-		return False
-
-
-
-#create cms page
-cmsPage=Page(data={
-	"css":["admin.css"],
-	"js":["admin.js"],
-	"template":"admin.html",
-	"path":"admin.html"
-})
-cmsPage.render()
-@auth_basic(check)
-def serveCmsPage():
-	return cmsPage.servePage()
 
 #get contents
 """

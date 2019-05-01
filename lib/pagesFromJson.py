@@ -7,7 +7,6 @@ pages=[]
 
 def generatePages():
 	for pageJson in Path('./app/pages').glob('**/*'):
-		#get json data of controller
-		pageData=json.loads(pageJson.read_text())
-		pages.append(Page(data=pageData))
+		#get json data of page
+		pages.append(Page(data=pageJson.name))
 		
