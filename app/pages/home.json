@@ -14,5 +14,6 @@
 		"onlineBuisness":"onlineBuisness.txt"
 	},
 	"path":"home.html",
-	"url":"/"
+	"url":"/",
+	"debug":true
 }

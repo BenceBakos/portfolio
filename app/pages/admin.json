@@ -4,5 +4,6 @@
 	"template":"admin.html",
 	"path":"admin.html",
 	"url":"/admin",
-	"auth":true
+	"auth":true,
+	"debug":true
 }
