@@ -17,9 +17,10 @@ import json
 import re
 import base64
 
-#***RELOADER***
-#true mean, rerender on every call
-reloader=True
+#**static asserts for pages(e.g: css/style.css or img/myImg.png)
+#dict of path-url pairs(e.g.  path:css/style.css - url:css/style)
+staticAsserts=[]
+
 
 class Page:
 	def __init__(self, data):
@@ -28,23 +29,17 @@ class Page:
 		else:
 			self.dataPath=Path('./app/pages/'+data)
 	
-	def servePage(self):
-		global reloader
-		
-		
-		
+	def servePage(self):		
 		if self.data['auth']:
 			@auth_basic(check)
 			def serve():
-				if reloader:
+				if self.data['debug']:
 					self.render()
-					print(self.data['path']+' is reoaded')
 				return static_file(Path(self.data['path']).name, root="static/")
 		else:
 			def serve():
-				if reloader:
+				if self.data['debug']:
 					self.render()
-					print(self.data['path']+' is reoaded')
 				return static_file(Path(self.data['path']).name, root="static/")
 		
 		return serve()
@@ -58,17 +53,37 @@ class Page:
 		
 		#**prepare css
 		if 'css' in self.data and len(self.data['css']):
-			outputCss=''
-			for cssPath in self.data['css']:
-				outputCss+=cssmin(Path('./app/css/'+cssPath).read_text())
-			tempData.update({"css":outputCss})
+			if self.data['debug']:
+				outputCss=''
+				for cssPath in self.data['css']:
+					cssUrl='/css/'+cssPath
+					outputCss+='<link href="'+cssUrl+'" rel="stylesheet" type="text/css">'
+					if cssUrl not in staticAsserts:
+						staticAsserts.append(cssUrl)
+						
+				tempData.update({"css":outputCss})
+			else:
+				outputCss=''
+				for cssPath in self.data['css']:
+					outputCss+='<style>'+cssmin(Path('./app/css/'+cssPath).read_text())+'</style>'
+				tempData.update({"css":outputCss})
 		
 		#**prepare js
 		if 'js' in self.data and len(self.data['js']):
-			outputJs=''
-			for jsPath in self.data['js']:
-				outputJs+=jsmin(Path('./app/js/'+jsPath).read_text())
-			tempData.update({"js":outputJs})
+			if self.data['debug']:
+				outputJs=''
+				for jsPath in self.data['js']:
+					jsUrl='/js/'+jsPath
+					outputJs+='<script src="'+jsUrl+'"></script>'
+					if jsUrl not in staticAsserts:
+							staticAsserts.append(jsUrl)
+				
+				tempData.update({"js":outputJs})
+			else:
+				outputJs=''
+				for jsPath in self.data['js']:
+					outputJs+='<script>'+jsmin(Path('./app/js/'+jsPath).read_text())+'</script>'
+				tempData.update({"js":outputJs})
 		
 		
 		#**prepare content
@@ -91,12 +106,17 @@ class Page:
 		
 		#***replace images with base64***
 		srcList=re.findall('<img[^>]+src="([^">]+)"', document)
-		for src in srcList:
-			imgFile=Path('./app/img/'+src)
-			if imgFile.is_file():
-				imgBase64=base64.b64encode(open(imgFile.as_posix(), 'rb').read()).decode('utf-8').replace('\n', '')
-				document=document.replace(src,'data:image/'+src.split('.')[1]+';charset=utf-8;base64, {0}'.format(imgBase64))
-		
+		if self.data['debug']:
+			for src in srcList:
+				imgFileUrl='/'+src
+				staticAsserts.append(imgFileUrl)
+		else:
+			for src in srcList:
+				imgFile=Path('./app/img/'+src)
+				if imgFile.is_file():
+					imgBase64=base64.b64encode(open(imgFile.as_posix(), 'rb').read()).decode('utf-8').replace('\n', '')
+					document=document.replace(src,'data:image/'+src.split('.')[1]+';charset=utf-8;base64, {0}'.format(imgBase64))
+			
 		#**write document to file
 		documentPath=Path('./static/'+self.data['path'])
 		documentPath.write_text(document)

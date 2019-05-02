@@ -4,26 +4,29 @@ from bottle import static_file,auth_basic
 from lib.auth import check
 from pathlib import Path
 import json
-
+from lib.page import Page,staticAsserts
+from glob import glob
 #***ROUTES FROM JSON***
-import lib.page
 #(/app/routes)
-import lib.pagesFromJson as pagesFromJson
-#generate page html files to /static folder
-pagesFromJson.generatePages()
+pages=[]
+for pageJson in Path('./app/pages').glob('**/*'):
+		#get json data of page
+		actualPage=Page(data=pageJson.name)
+		pages.append(actualPage)
+		#render actualPage
+		actualPage.render()
+		#create route for page
+		if actualPage.data['url']:
+			bottle.route(actualPage.data['url'],['get'],actualPage.servePage)	
 
-#append PAGES to APP as ROUTES based on page.data['url']
-for page in pagesFromJson.pages:
-	#render page
-	page.render()
-	#create route
-	if page.data['url']:
-		if page.data['auth']:
-			
-			bottle.route(page.data['url'],['get'],page.servePage)		
-		else:
-			bottle.route(page.data['url'],['get'],page.servePage)		
+#***STATIC ASSERTS FOR PAGES***
+def serveAssert(p):
+	return lambda :static_file(p, root="./app")
 
+if len(staticAsserts):
+	print(staticAsserts)
+	for assertUrl in staticAsserts:		
+		bottle.route(assertUrl,['get'],serveAssert(assertUrl))
 
 #***SERVE STATIC FOLDER***
 """bottle.route("/<filepath:path>",["get"])

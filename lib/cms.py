@@ -1,4 +1,3 @@
-from lib.page import Page
 from pathlib import Path
 import json
 from bottle import response,request,auth_basic
@@ -50,7 +49,6 @@ def getContents():
 		}
 		
 	response.content_type = 'application/json'
-	print(json.dumps(contents))
 	return json.dumps(contents)
 	
 #update api
@@ -62,7 +60,6 @@ text
 @auth_basic(check)
 def update():
 	updateData = request.json
-	print(json.dumps(updateData))
 	file=Path(updateData['path'])
 	if file.is_file():
 		file.write_text(updateData['text'])
