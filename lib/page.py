@@ -108,7 +108,7 @@ class Page:
 		srcList=re.findall('<img[^>]+src="([^">]+)"', document)
 		if self.data['debug']:
 			for src in srcList:
-				imgFileUrl='/'+src
+				imgFileUrl='/img/'+src
 				staticAsserts.append(imgFileUrl)
 		else:
 			for src in srcList:
